@@ -1,0 +1,41 @@
+Analyze our CURRENT POSITION with the provided 12-hour candlestick 5-minute candle chart image and data. Provide the following details based on the chart's recent trend:
+
+* rationale:  A concise rationale explaining the reasoning for the predicted move
+* entry_rationale:  A concise rationale for the suggested entry price
+* direction:  The direction of the next expected move (up, down, neutral).
+* confidence_percentage:  The confidence percentage for the direction.
+* magnitude:  The magnitude of the expected move (in the chart's unit, e.g., USD).
+* magnitude_confidence:  The confidence percentage for the magnitude.
+* should_create_new_position:  Whether we should create a position here, if we do not already have one (true, false, null if we have one already)
+  * IMPORTANT NOTE: there is a cost of creating a position, and a risk of holding a bad position.  Make this decision carefully
+* should_close_position: Whether we should close our existing position, if we have one  (true, false, null if we do not have one currently)
+* entry_price: The entry price if we were to open a position, if we do not have one now (true, false, null)
+* tp_price: What the "take profit" price should be set at, if a position were to be opened
+* sl_price: The price a stop-loss should be set at (lower than entry if long, higher than entry if short)
+
+Use observable patterns such as candlestick formations, support/resistance levels, volume analysis, and general price trends for your analysis. Ensure the response is in JSON format with all fields included.
+
+We will be using 40x leverage, so stop-loss and take-profit prices should be set accordingly
+
+Example JSON response:
+
+{
+  "rationale": "The 5-minute chart shows a clear rebound with consistent green candles supported by higher volume. The price has broken above minor resistance levels, indicating a continued upward movement.",
+  "entry_rationale": "Lorem ipsum",
+  "direction": "up",
+  "confidence_percentage": 85,
+  "magnitude": 14,
+  "magnitude_confidence": 78,
+  "should_create_new_position": null,
+  "should_close_position": null,
+  "entry_price": 3100.00,
+  "tp_price": 3108.47,
+  "sl_price": 3095.88,
+}
+
+{
+  "current_position": {
+    "type": "long",
+    "entry_price": 3093.74
+  }
+}

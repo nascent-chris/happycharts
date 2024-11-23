@@ -1,0 +1,21 @@
+[package]
+name = "happycharts"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+plotters = "0.3"
+plotters-backend = "0.3"
+reqwest = { version = "0.11", features = ["json"] }
+tokio = { version = "1.0", features = ["full"] }
+serde_json = "1.0"
+chrono = "0.4"
+anyhow = "1.0"
+arboard = "3.2"
+image = "0.24"                                      # needed to convert the image data
+serde = { version = "1.0", features = ["derive"] }
+openai-api-rs = "5.0.6"
+dotenvy = "0.15.7"
+base64 = "0.21"
+tracing-subscriber = "0.3.18"
+tracing = "0.1.40"

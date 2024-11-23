@@ -1,0 +1,192 @@
+Analyze our CURRENT POSITION along with the provided chart data (1 hour candles over 48 hours), as well as the current position below:
+CURRENT POSITION:
+{
+  "type": "long",
+  "entry_price": 3284.81,
+  "entry_time": 1732301659,
+  "take_profit": 3400,
+  "stop_loss": 3250,
+  "leverage": 25,
+  "size": "3.259 ETH",
+}
+
+
+Exchange parameters:
+{
+  "open_fee": "0.06%",
+  "close_fee": "0.06%",
+  "borow_rate": "0.0031% per hour"
+}
+
+Analysis Parameters:
+1. Timeframe Weighting:
+   - Primary analysis window (last 4 hours): 50% weight
+   - Secondary window (4-24 hours): 30% weight
+   - Context window (24-48 hours): 20% weight
+
+2. Trend Definition:
+   - Uptrend requires 3 consecutive higher highs AND higher lows within the primary window
+   - Downtrend requires 3 consecutive lower highs AND lower lows within the primary window
+   - Sideways if neither condition is met
+
+3. Support/Resistance Levels:
+   - Must have at least 3 touches with maximum 0.5% deviation
+   - Must be tested in at least two different 4-hour periods
+   - Valid for 24 hours after last touch
+
+4. Significant Movement Definition:
+   - Short-term: >1.5% price change within 1 hour
+   - Medium-term: >3% price change within 4 hours
+   - Long-term: >5% price change within 24 hours
+
+5. BTC Correlation Rules:
+   - BTC movement >2% in 1 hour triggers high alert
+   - BTC trend overrides ETH signals if:
+     * BTC shows >3% movement in last 4 hours AND
+     * Historical correlation >0.8 in last 24 hours
+   
+6. Risk Level Definitions:
+   - Low Risk:
+     * Price within 1% of established support/resistance
+     * Volume increasing on reversal
+     * Volatility (ATR) declining
+     * Minimum 3 confirming signals
+   - Medium Risk:
+     * Price transitioning between levels
+     * Normal volatility (ATR within 2 standard deviations)
+     * Minimum 2 confirming signals
+   - High Risk:
+     * Irregular volatility (ATR outside 2 standard deviations)
+     * Conflicting signals
+     * Price in no-man's land (>2% from support/resistance)
+
+7. Position Management Rules:
+   For New Positions:
+   - Minimum 2:1 reward-to-risk ratio required
+   - Stop-loss placement:
+     * For longs: Below nearest support or 2 * ATR, whichever is closer
+     * For shorts: Above nearest resistance or 2 * ATR, whichever is closer
+   - Take-profit targets must align with next major resistance/support level
+
+   For Existing Positions:
+   - Calculate current P&L as: ((current_price - entry_price) / entry_price * leverage * 100) for longs
+   - Calculate current P&L as: ((entry_price - current_price) / entry_price * leverage * 100) for shorts
+   - Consider trailing stop-loss when position is >2% profitable
+   - Evaluate original trade thesis against current market conditions
+   - Calculate remaining reward-to-risk ratio based on current price
+
+Required Analysis Components:
+1. Volume Analysis:
+   - Compare current volume to 24h average
+   - Note divergences between price and volume
+   - Weight recent volume (4h) more heavily
+
+2. Price Action:
+   - Identify key candlestick patterns (requires minimum 2 candle confirmation)
+   - Note any gaps or unusual candle sizes (>150% of average)
+   - Track momentum using RSI (oversold <30, overbought >70)
+
+3. Trend Analysis:
+   - Primary trend (4h)
+   - Secondary trend (24h)
+   - Trend alignment across timeframes
+   - Note any trend breaks or confirmations
+
+Provide your response in JSON format with the following fields:
+{
+  "position_status": {
+    "has_position": "boolean indicating if there's an existing position",
+    "position_type": "long/short/null",
+    "current_pnl_percentage": "calculated P&L for existing position, null if no position",
+    "hours_held": "number of hours position has been held, null if no position",
+    "original_thesis_valid": "boolean indicating if original trade thesis remains valid, null if no position"
+  },
+  "analysis": {
+    "rationale": "Detailed explanation incorporating all relevant signals and their weights",
+    "direction": "up/down/neutral based on weighted signal analysis",
+    "confidence_percentage": "Based on number and strength of confirming signals"
+  },
+  "position_action": {
+    "action": "new_long/new_short/hold/close/adjust/none",
+    "reasoning": "Detailed explanation of why this action is recommended"
+  },
+  "existing_position_management": {
+    "adjust_tp": "New take-profit price if adjustment recommended, null if no change",
+    "adjust_sl": "New stop-loss price if adjustment recommended, null if no change",
+    "adjustment_reasoning": "If adjustments recommended, explain why"
+  },
+  "new_position_parameters": {
+    "entry_price": "Only if recommending new position",
+    "leverage": "Only if recommending new position, 15-50x based on risk level",
+    "tp_price": "Only if recommending new position",
+    "sl_price": "Only if recommending new position",
+    "position_size": "Recommended position size in asset terms"
+  },
+  "market_analysis": {
+    "significant_down_likelihood": "Percentage based on weighted signals",
+    "significant_up_likelihood": "Percentage based on weighted signals",
+    "sideways_likelihood": "Percentage based on weighted signals",
+    "trade_risk_rationale": "Specific signals that determined risk level",
+    "trade_risk": "low/medium/high based on defined criteria"
+  },
+  "technical_signals": {
+    "confirmation_signals": ["Array of specific signals confirmed"],
+    "invalidation_signals": ["Array of signals that would invalidate the analysis"]
+  },
+  "btc_correlation_impact": {
+    "correlation_coefficient": "Current BTC-ETH correlation",
+    "btc_trend": "Current BTC trend",
+    "override_applied": "Boolean indicating if BTC override was applied"
+  }
+}
+
+Signal Priority Hierarchy:
+1. Trend alignment across timeframes
+2. Support/resistance levels with volume confirmation
+3. BTC correlation impact
+4. Candlestick patterns
+5. Volume analysis
+6. Momentum indicators
+
+Position Management Requirements:
+For Existing Positions:
+- Hold if:
+  * Original trade thesis still valid
+  * No strong reversal signals
+  * Current risk/reward remains favorable
+  * Position showing profit or acceptable drawdown
+
+- Close if:
+  * Original trade thesis invalidated
+  * Strong reversal signals present
+  * Risk/reward no longer favorable
+  * Stop-loss or take-profit reached
+  * Position showing excessive drawdown (>50% of distance to stop-loss)
+
+- Adjust if:
+  * Position profitable and new technical levels emerge
+  * Risk can be reduced without significantly impacting profit potential
+  * Trailing stop-loss can lock in profits
+  * Better reward/risk ratio available at new levels
+
+For New Positions:
+- Long positions require:
+  * Uptrend in primary timeframe
+  * Price above nearest significant support
+  * Minimum 2 confirming signals
+  * Valid stop-loss placement within risk parameters
+  
+- Short positions require:
+  * Downtrend in primary timeframe
+  * Price below nearest significant resistance
+  * Minimum 2 confirming signals
+  * Valid stop-loss placement within risk parameters
+
+Position Restriction Rules:
+- No new positions if:
+  * Volatility exceeds 3 standard deviations from mean
+  * Spread exceeds 0.1%
+  * Less than 2 confirming signals present
+  * Conflicting signals in primary timeframe
+
+All percentage calculations must align with likelihood ratings and maintain consistent internal logic. Confidence ratings should directly correlate with the number and strength of confirming signals.
